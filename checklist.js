@@ -5,7 +5,7 @@
 
   facts = window.facts = Facts();
 
-  initialData = (serialized = localStorage.getItem("checklist datoms")) ? JSON.parse(serialized) : [[true, "T1460752005472.395", "time", 1460752005472.395, "T1460752005472.395"], [true, "checklist", "entities", [1, 2, 3], "T1460752005472.395"], [true, "checklist", "title", "Checklist", "T1460752005472.395"], [true, 1, "label", "Get a job", "T1460752005472.395"], [true, 2, "label", "Memorize chords to Surfer Girl\nIntro:\nD+ F#- B- F#- 𝄀 G+ E- A+ NC\nVerse 1:\nD+ B- G5 A5 𝄀 D▵ D7 G+ G-\nD+ B- G5 A5 𝄀 D+ B- G+ A+\nVerse 2:\nD+ B- G5 A5 𝄀 D▵ D7 G+ G-\nD+ B- G5 A5 𝄀 D+ B-/G D+ D7\nBridge:\nG+ A+ D▵ B- 𝄀 G+ A+ D+ D7\nG+ A+ D▵ B- 𝄀 E7 A+ Bb\nThen repeat in Eb", "T1460752005472.395"], [true, 3, "label", "Spend some time with a cat", "T1460752005472.395"]];
+  initialData = (serialized = localStorage.getItem("checklist datoms")) ? JSON.parse(serialized) : [[true, "T1460752005472.395", "time", 1460752005472.395, "T1460752005472.395"], [true, "checklist", "entities", [1, 2, 3], "T1460752005472.395"], [true, "checklist", "title", "Checklist", "T1460752005472.395"], [true, 1, "label", "Buy peanut butter", "T1460752005472.395"], [true, 2, "label", "Get a job", "T1460752005472.395"], [true, 3, "label", "Memorize chords to Surfer Girl\nVerse 1:\nD+ B- G5 A5 𝄀 D▵ D7 G+ G-\nD+ B- G5 A5 𝄀 D+ B- G+ A+\nVerse 2:\nD+ B- G5 A5 𝄀 D▵ D7 G+ G-\nD+ B- G5 A5 𝄀 D+ B-/G D+ D7\n", "T1460752005472.395"]];
 
   facts.datoms = Facts.Immutable.Stack(Facts.Immutable.fromJS(initialData));
 
