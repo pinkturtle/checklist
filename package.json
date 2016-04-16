@@ -1,9 +1,9 @@
 {
   "name": "checklist",
   "description": "The checklist demo of pinkturtle/facts",
+  "license": "Unlicense",
   "readme": "index.html",
   "repository": "pinkturtle/checklist",
-  "license": "Unlicense",
   "version": "0.0.0",
   "devDependencies": {
     "coffee-script": "^1.10.0"
