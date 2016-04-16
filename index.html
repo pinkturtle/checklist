@@ -1,0 +1,114 @@
+<!DOCTYPE HTML><meta charset="utf-8">
+<title></title>
+<script src="Function.js" charset="utf-8"></script>
+<script src="document.js" charset="utf-8"></script>
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="facts.pack.js" charset="utf-8"></script>
+<script src="checklist.js" charset="utf-8"></script>
+
+<article id="Checklist" class="checklist">
+  <header>
+    <div><strong class="title" contenteditable="plaintext-only">&nbsp;</strong></div>
+    <div>Version <span class="version">&nbsp;</span></div>
+  </header>
+  <ol class="entities"></ol>
+</article>
+
+<article id="Checklist-Datoms" class="datoms">
+  <table class="datoms">
+  <thead>
+    <tr>
+      <th class="credence"><div>OK?&nbsp;&nbsp;</div></div></th>
+      <th class="entity.id"><div>Entity</div></th>
+      <th class="attribute"><div>Attribute</div></th>
+      <th class="value"><div>Value</div></th>
+      <th class="transaction"><div>Transaction</div></th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+  </table>
+</article>
+
+<footer>
+<a href="" title="The web page that is loaded in your web agent at the moment.">This</a> is a demonstration of <a href="https://pinkturtle.github.io/facts/" title="Explore the Facts documentation."><img src="pinkturtle@0.1x.png" alt="pinkturtle"> <strong>Facts</strong></a>.
+<a class="view source" href="https://github.com/pinkturtle/checklist" title="Read the source code for this page at GitHub.">View source</a>.
+</footer>
+
+<style media="screen">
+
+body, header, footer, h1, div, article, nav, ol, ul, li, p, pre, form, input { position: relative; margin:0; padding:0; }
+h1, p, pre, input { font:inherit; }
+[contenteditable] { outline: none; }
+* { cursor: default; }
+a { cursor: pointer; text-decoration: none;}
+
+/* Typefaces ------------------------------------------------------------------------------------*/
+
+.checklist { font: 24px/33px "Chalkboard SE", "Comic Sans MS"; font-weight: 300; letter-spacing: -0.055ex; }
+.checklist > div, .checklist header div:last-child { font-size: 18px; line-height: 33px; }
+.datoms table * {font: 11px/1 monospace; -webkit-user-select:none; }
+body > footer { font: 16px/22px -apple-system-font, sans-serif; }
+strong { font-weight: 600; }
+small { font-size: 0; }
+
+/* Basics ---------------------------------------------------------------------------------------*/
+
+article { min-height: 616px; width: 48%; max-width: 484px; margin: 3.33% 0.33%; padding: 11px; }
+
+.checklist form { position:absolute; width:100%;  }
+.checklist header { border-bottom: 2px solid black; padding: 0px 0 9px; margin: 0 11px; }
+.checklist header div:first-child { line-height: 33px; }
+.checklist header div:last-child { line-height: 22px; }
+.checklist .entities {   list-style-type: none; font-size: 18px; line-height: 22px; padding: 0;}
+.checklist .entities > li { margin: 11px; padding-left: 22px; transform:scale3d(1,1,1); transform-origin: left; transition: transform 111ms;}
+.checklist li .checkbox { position: absolute; left:-22px; top: -5px; width: 44px; height: 33px; }
+.checklist li .checkbox input { position: absolute; left:0; top: 0; right:0; bottom: 0; visibility: hidden; }
+.checklist li .checkbox .icon { position: absolute; left:21px; top: 0px; font-size: 30px; line-height: 22px; color: hsla(355, 100%, 33%, 0.9); }
+.checklist li .checkbox .box { position: absolute; left:23px; top: 10px; outline: 2px solid black; width: 12px; height: 12px; }
+.checklist li       .checkbox input               + .icon { position: absolute; left:18px; top: 0px; font-size: 30px; line-height: 22px; color: hsla(330, 100%, 33%, 0.9); }
+.checklist li       .checkbox input:not(:checked) + .icon { visibility: hidden; transform: scale(2)rotate(-6deg); }
+.checklist li       .checkbox input:checked       + .icon { visibility: visible; transform: scale(1)rotate(-5deg); transition:transform 333ms; }
+.checklist li       .checkbox:not(:hover)                   .box { outline-color: hsla(0, 0%, 0%, 0.33); }
+.checklist li       .checkbox:hover                         .box { outline-color: hsla(0, 0%, 0%, 0.55); }
+.checklist li       .checkbox:hover input:checked + .icon + .box { outline-color: hsla(0, 0%, 0%, 0.33); }
+.checklist li       .checkbox                               .box { transform:scale3d(0.77,0.77,1); transition: transform 222ms ease-in; }
+.checklist li:hover .checkbox input:not(:checked) + .icon + .box { transform:scale3d(1,1,1); transition: transform 111ms ease-out; }
+.checklist li .label { white-space: pre-wrap; }
+
+.datoms table { border-collapse: collapse;}
+.datoms table * {position: relative; }
+.datoms table th { text-align: left; font-weight: normal; opacity: 1; padding-right: 11px; }
+.datoms table th:last-child { padding:0; }
+.datoms table th div { border-bottom: 1px solid hsla(0, 0%, 0%, 0.33); border-top: 1px solid hsla(0, 0%, 0%, 0.33); }
+.datoms table td { opacity: 0.66; padding-right: 11px; }
+.datoms table td div {white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: absolute; left: 0; right: 11px; top: 0; height: 11px; }
+.datoms table .credence { width: 1%; }
+.datoms table .entity { width: 1%; }
+.datoms table .attribute { width: 1%; }
+.datoms table .value { width:96%; }
+.datoms table .transaction { width: 1%; padding: 0;}
+.datoms table tr.selected td { background: hsl(190, 66%, 80%); opacity: 1;}
+.datoms table tr.after td  { background:transparent; opacity: 0.33; }
+.datoms table tr.before td { background:transparent; opacity: 1; }
+
+/* Layout ---------------------------------------------------------------------------------------*/
+
+#Checklist:not(.initialized), #Checklist-Datoms:not(.initialized) { visibility: hidden; }
+#Checklist { position: fixed; right: 50%; top: 0; }
+#Checklist-Datoms { position: relative; left: 50%; top: 0; }
+body > footer { left: 50%; width: 50%; padding: 1.11% 0.33% 1.11%; }
+img[alt=pinkturtle] { width: 1em; opacity: 1; vertical-align: baseline; margin: 0 0ex 0 0.33ex; top: 1px; position: relative; }
+
+/* Paint ----------------------------------------------------------------------------------------*/
+
+html { background: hsl(0, 0%, 22%); }
+article { box-shadow: 0px 2px 11px hsla(0, 0%, 0%, 0.77); }
+#Checklist { background: hsl(55, 44%, 93%); }
+#Checklist-Datoms { background: hsl(190, 22%, 90%); }
+footer { color: hsla(0, 0%, 100%, 0.33); opacity: 0.33; transition: opacity 99ms linear; }
+footer:hover { opacity: 1; }
+footer a:hover * { cursor: pointer; }
+footer a { color: hsla(210, 88%, 85%, 1); }
+footer a[href=""], footer a.view.source { color:inherit; text-decoration: underline;}
+
+</style>
