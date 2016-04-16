@@ -1,33 +1,52 @@
 document.on "DOMContentLoaded", ->
   if location.host is "pinkturtle.github.io" and location.protocol isnt "https:"
     destination = String(location).replace("http:", "https:")
-    console.info "Upgrading connection protocol for transport layer security.", {destination}, t: performance.now()
-    return window.location = destination
+    console.info "Switching protocols to establish connection with transport layer security.", {destination}, t: performance.now()
+    Function.delay 11, -> document.body.setAttribute "initialized", "redirect"
+    Function.delay 33, -> window.location = destination
+    return to:destination
   console.info "initializing window.checklist", t:performance.now()
-  facts = window.facts = Facts()
+  window.checklist = Facts()
   initialData = if serialized = localStorage.getItem("checklist datoms")
     renderDatomTableHeader "data saved in storage"
     JSON.parse(serialized)
   else
     constructDemoChecklistDatoms()
-  facts.datoms = Facts.Immutable.Stack Facts.Immutable.fromJS(initialData)
+  checklist.datoms = Facts.Immutable.Stack Facts.Immutable.fromJS(initialData)
   console.info "window.checklist is ready", t: performance.now()
   console.info "initializing display", t: performance.now()
-  facts.on "transaction", (report) -> renderDatomTableNovelty(report)
-  facts.on "transaction", (report) -> saveDataToLocalStorage(report)
-  facts.on "transaction", (report) -> renderChecklistVersion(report)
-  facts.on "transaction", (report) -> renderChecklistTitleInHead()
-  transaction = facts.datoms.get(0).get(4)
-  data = facts.datoms.filter((datom) -> String(datom.get(1))[0] isnt "T").reverse()
+  checklist.on "transaction", (report) -> renderDatomTableNovelty(report)
+  checklist.on "transaction", (report) -> saveDataToLocalStorage(report)
+  checklist.on "transaction", (report) -> renderChecklistVersion(report)
+  checklist.on "transaction", (report) -> renderChecklistTitleInHead()
+  transaction = checklist.datoms.get(0).get(4)
+  data = checklist.datoms.filter((datom) -> String(datom.get(1))[0] isnt "T").reverse()
   renderDatomTableNovelty({data, transaction})
   renderChecklist(transaction)
   renderChecklistTitleInHead()
   document.querySelector("#Checklist").classList.add("initialized")
   document.querySelector("#Checklist-Datoms").classList.add("initialized")
+  document.body.setAttribute "touch-events" if TouchEvent?
+  document.body.setAttribute "initialized", yes
   console.info "display is ready", t: performance.now()
 
+
+document.on "keydown", "#Checklist .title", (event) ->
+  switch event.keyCode
+    # Enter
+    when 13 then event.preventDefault()
+    # Delete
+    when 8 then event.preventDefault() if event.target.innerText.trim() is ""
+
+document.on "paste", "#Checklist .title", (event) ->
+  if text = event.clipboardData.getData("text/plain")
+    event.preventDefault()
+    renderChecklist checklist.advance("checklist", "title":text.replace(/\n/g, " ").trim()).transaction
+    resetPositionOfTextCursor(text)
+    document.querySelector("#Checklist .title").focus()
+
 document.on "input", "#Checklist .title", (event) ->
-  facts.advance "checklist", "title": event.target.innerText
+  Function.delay 1, -> checklist.advance "checklist", "title": event.target.innerText.trim()
 
 document.on "mouseover", "#Checklist-Datoms [data-transaction]", (event) ->
   transaction = event.target.closest("[data-transaction]").getAttribute("data-transaction")
@@ -35,20 +54,20 @@ document.on "mouseover", "#Checklist-Datoms [data-transaction]", (event) ->
   renderChecklist(transaction)
 
 document.on "mouseout", "#Checklist-Datoms", ->
-  renderSelectedTransactionInDatomTable(facts.datoms.get(0).get(4))
-  renderChecklist(facts.datoms.get(0).get(4))
+  renderSelectedTransactionInDatomTable(checklist.datoms.get(0).get(4))
+  renderChecklist(checklist.datoms.get(0).get(4))
 
 renderChecklist = (transaction) ->
-  database = facts.database(Number(transaction.replace("T","0")))
-  checklist = Facts.query(in:database, where:(id) -> id is "checklist")[0]
-  entities = Facts.query(in:database, where:(id) -> id in checklist.entities)
+  database = checklist.database(Number(transaction.replace("T","0")))
+  root = Facts.query(in:database, where:(id) -> id is "checklist")[0]
+  entities = Facts.query(in:database, where:(id) -> id in root.entities)
   li = d3.select("#Checklist").select("ol.entities").selectAll("li").data(entities, (entity)->entity.id)
   li.enter()
     .append "li"
     .on "change", (entity) ->
-      facts[if d3.event.target.checked then "advance" else "reverse"] entity.id, "checked": true
+      checklist[if d3.event.target.checked then "advance" else "reverse"] entity.id, "checked": true
     .on "input", (entity) ->
-      facts.advance entity.id, "label": d3.event.target.innerText
+      checklist.advance entity.id, "label": d3.event.target.innerText
   li.html (entity) -> """
     <label class="checkbox">
       <input name="entity-#{entity.id}" type="checkbox" #{if entity.checked then 'checked' else ''}>
@@ -58,17 +77,17 @@ renderChecklist = (transaction) ->
     <div class="text label" contenteditable="plaintext-only">#{entity.label}</div>
     """
   li.exit().remove()
-  renderChecklistTitle(checklist["title"])
+  renderChecklistTitle(root["title"])
   renderChecklistVersion({transaction})
 
 renderChecklistTitle = (title) ->
-  document.querySelector("#Checklist .title").innerText = title or undefined
+  document.querySelector("#Checklist .title").innerText = title or "\n"
 
 renderChecklistTitleInHead = ->
-  document.querySelector("title").innerText = facts.pull("checklist")["title"] or "undefined"
+  document.querySelector("title").innerText = checklist.pull("checklist")["title"] or "undefined"
 
 renderChecklistVersion = (report) ->
-  transaction = report?.transaction or facts.datoms.first().get(4)
+  transaction = report?.transaction or checklist.datoms.first().get(4)
   document.querySelector("#Checklist .version").innerText = transaction
 
 renderDatomTableHeader = (situation) ->
@@ -107,7 +126,7 @@ renderSelectedTransactionInDatomTable = (transaction) ->
 saveDataToLocalStorage = ->
   Function.delay 1, ->
     try
-      localStorage.setItem "checklist datoms", JSON.stringify(facts.datoms)
+      localStorage.setItem "checklist datoms", JSON.stringify(checklist.datoms)
       renderDatomTableHeader "data saved in storage"
     catch exception
       renderDatomTableHeader "data is volatile" + switch
@@ -128,3 +147,13 @@ constructDemoChecklistDatoms = ->
     [true, 2, "label", "Get a job", transaction]
     [true, 3, "label", "Memorize Surfer Girl\nVerse 1:\nD+ B- G5 A5 𝄀 D▵ D7 G+ G-\nD+ B- G5 A5 𝄀 D+ B- G+ A+\nVerse 2:\nD+ B- G5 A5 𝄀 D▵ D7 G+ G-\nD+ B- G5 A5 𝄀 D+ B-/G D+ D7\n", transaction]
   ]
+
+resetPositionOfTextCursor = (text) ->
+  textElement = document.querySelector("#Checklist .title")
+  selection = window.getSelection()
+  selection.removeAllRanges()
+  if text
+    range = document.createRange()
+    range.setStart(textElement.childNodes[0], text.length)
+    range.setEnd(textElement.childNodes[0], text.length)
+    selection.addRange(range)

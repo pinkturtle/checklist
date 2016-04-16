@@ -6,17 +6,11 @@
 <script src="facts.pack.js" charset="utf-8"></script>
 <script src="checklist.js" charset="utf-8"></script>
 
-<article id="Checklist" class="checklist">
-  <header>
-    <div><strong class="title" contenteditable="plaintext-only">&nbsp;</strong></div>
-    <div>Version <span class="version">&nbsp;</span></div>
-  </header>
-  <ol class="entities"></ol>
-</article>
+<header></header>
 
 <article id="Checklist-Datoms" class="datoms">
   <header>
-    Table of checklist datoms in memory<span class="data saved in storage" style="display:none;"> and serialized in localStorage</span>.
+    Table of checklist datoms in memory<span class="data saved in storage" style="display:none;"> and serialized in local storage</span>.
     <span class="data is volatile" style="display:none;"><br><br><em>Caution:</em> These <strong>datoms will be forgotten</strong> when the window is unloaded<span class="because of quota" style="display:none;"> becuase the storage quota has been exceeded</span>.</span><span class="because of quota" style="display:none;"> Perhaps this is an Incognito or Private Window?</span><br><br></span>
   </header>
   <table>
@@ -31,6 +25,14 @@
   </thead>
   <tbody></tbody>
   </table>
+</article>
+
+<article id="Checklist" class="checklist">
+  <header>
+    <div><strong class="title" contenteditable="plaintext-only">&nbsp;</strong></div>
+    <div>Version <span class="version">&nbsp;</span></div>
+  </header>
+  <ol class="entities"></ol>
 </article>
 
 <footer>
@@ -57,7 +59,6 @@ small { font-size: 0; }
 
 /* Basics ---------------------------------------------------------------------------------------*/
 
-article { min-height: 616px; width: 48%; max-width: 484px; margin: 3.33% 0.33%; padding: 11px; }
 
 .checklist form { position:absolute; width:100%;  }
 .checklist header { border-bottom: 2px solid black; padding: 0px 0 9px; margin: 0 11px; }
@@ -91,28 +92,37 @@ article { min-height: 616px; width: 48%; max-width: 484px; margin: 3.33% 0.33%; 
 .datoms table .attribute { width: 1%; }
 .datoms table .value { width:96%; }
 .datoms table .transaction { width: 1%; padding: 0;}
-.datoms table tr.selected td { background: hsl(190, 66%, 80%); opacity: 1;}
+.datoms table tr.selected td { background: hsl(210, 66%, 80%); opacity: 1;}
 .datoms table tr.after td  { background:transparent; opacity: 0.33; }
 .datoms table tr.before td { background:transparent; opacity: 1; }
 
 /* Layout ---------------------------------------------------------------------------------------*/
 
+body { padding: 11px 0; }
+article { min-height: 693px; width: 47%; max-width: 484px; margin: 1.11% 0.22% 1.11%; padding: 11px; }
 #Checklist:not(.initialized), #Checklist-Datoms:not(.initialized) { visibility: hidden; }
-#Checklist { position: fixed; right: 50%; top: 0; }
-#Checklist-Datoms { position: relative; left: 50%; top: 0; }
-body > footer { left: 50%; width: 50%; padding: 1.11% 0.33% 1.11%; }
+#Checklist { position: fixed; right: 50%; top: 11px; }
+#Checklist-Datoms { position: relative; left: 50%; top: 0px; }
+body > header { left: 50%; width: 50%; padding: 0 0.33% 0; }
+body > footer { left: 50%; width: 50%; margin: -1.11% 0.33% 0%; padding: 2.22% 0 1.11%;}
 img[alt=pinkturtle] { width: 1em; opacity: 1; vertical-align: baseline; margin: 0 0.33ex; top: 1px; position: relative; }
 
 /* Paint ----------------------------------------------------------------------------------------*/
 
-html { background: hsl(0, 0%, 22%); }
+body { background: hsl(0, 0%, 0%); transition: background linear 99ms; }
+body[initialized] { background: hsl(0, 0%, 33%); }
+body[initialized=redirect] { background: hsl(150, 88%, 44%); transition: background ease-out 555ms; }
 article { box-shadow: 0px 2px 11px hsla(0, 0%, 0%, 0.77); }
-#Checklist { background: hsl(55, 44%, 93%); }
-#Checklist-Datoms { background: hsl(190, 22%, 90%); }
-footer { color: hsla(0, 0%, 100%, 0.33); opacity: 0.33; transition: opacity 99ms linear; }
-footer:hover { opacity: 1; }
+#Checklist { background: hsl(60, 44%, 93%); }
+#Checklist-Datoms { background: hsl(210, 44%, 93%); }
+#Checklist-Datoms table tr.selected td { background: hsl(210, 77%, 88%); }
+footer { color: hsla(0, 0%, 100%, 1); }
+body:not([accepts-touch-events]) footer       { opacity: 0.33; transition: opacity 99ms linear; }
+body:not([accepts-touch-events]) footer:hover { opacity: 1; }
 footer a:hover * { cursor: pointer; }
 footer a { color: hsla(210, 88%, 85%, 1); }
 footer a[href=""], footer a.view.source { color:inherit; text-decoration: underline;}
+
+
 
 </style>
