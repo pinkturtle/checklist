@@ -1,5 +1,8 @@
-scripts: facts.pack.js
+scripts: d3.v3.min.js facts.pack.js
 	coffee --watch --compile *.coffee
+
+d3.v3.min.js:
+	curl -O https://d3js.org/d3.v3.min.js
 
 facts.pack.js:
 	curl -O https://pinkturtle.github.io/facts/facts.pack.js
