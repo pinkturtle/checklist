@@ -15,7 +15,11 @@
 </article>
 
 <article id="Checklist-Datoms" class="datoms">
-  <table class="datoms">
+  <header>
+    Table of checklist datoms in memory<span class="data saved in storage" style="display:none;"> and serialized in localStorage</span>.<br><br>
+    <span class="data is volatile" style="display:none;"><em>Caution:</em> These <strong>datoms will be forgotten</strong> when the window is unloaded<span class="because of file protocol" style="display:none;"> becuase storage isn’t available over the file: protocol</span><span class="because of quota" style="display:none;"> becuase the storage quota has been exceeded</span>.<br><br></span>
+  </header>
+  <table>
   <thead>
     <tr>
       <th class="credence"><div>OK?&nbsp;&nbsp;</div></div></th>
@@ -37,7 +41,7 @@
 <style media="screen">
 
 body, header, footer, h1, div, article, nav, ol, ul, li, p, pre, form, input { position: relative; margin:0; padding:0; }
-h1, p, pre, input { font:inherit; }
+h1, p, pre, input, em, strong { font:inherit; }
 [contenteditable] { outline: none; }
 * { cursor: default; }
 a { cursor: pointer; text-decoration: none;}
@@ -46,7 +50,7 @@ a { cursor: pointer; text-decoration: none;}
 
 .checklist { font: 24px/33px "Chalkboard SE", "Comic Sans MS"; font-weight: 300; letter-spacing: -0.055ex; }
 .checklist > div, .checklist header div:last-child { font-size: 18px; line-height: 33px; }
-.datoms table * {font: 11px/1 monospace; -webkit-user-select:none; }
+.datoms {font: 11px/1 monospace; -webkit-user-select:none; }
 body > footer { font: 16px/22px -apple-system-font, sans-serif; }
 strong { font-weight: 600; }
 small { font-size: 0; }
