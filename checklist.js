@@ -18,7 +18,7 @@
       t: performance.now()
     });
     facts = window.facts = Facts();
-    initialData = (serialized = localStorage.getItem("checklist datoms")) ? JSON.parse(serialized) : constructDemoChecklistDatoms();
+    initialData = (serialized = localStorage.getItem("checklist datoms")) ? (renderDatomTableHeader("data saved in storage"), JSON.parse(serialized)) : constructDemoChecklistDatoms();
     facts.datoms = Facts.Immutable.Stack(Facts.Immutable.fromJS(initialData));
     console.info("window.checklist is ready", {
       t: performance.now()
@@ -143,7 +143,6 @@
   renderDatomTableHeader.patterns = {
     "#Checklist-Datoms span.data.saved.in.storage": "data saved in storage",
     "#Checklist-Datoms span.data.is.volatile": "data is volatile",
-    "#Checklist-Datoms span.because.of.file.protocol": "storage isn’t available in windows loaded over the file: protocol",
     "#Checklist-Datoms span.because.of.quota": "storage quota was exceeded"
   };
 
@@ -180,14 +179,12 @@
       } catch (error) {
         exception = error;
         return renderDatomTableHeader("data is volatile" + (function() {
-          var ref;
           switch (false) {
-            case !(exception.name === "QuotaExceededError" && location.protocol === "file:"):
-              return " because storage isn’t available in windows loaded over the file: protocol";
             case exception.name !== "QuotaExceededError":
               return " because storage quota was exceeded";
             default:
-              return (ref = console.error("Unrecognized exception durring saveDataToLocalStorage", exception)) != null ? ref : "";
+              console.error("Unrecognized exception durring saveDataToLocalStorage", exception);
+              return " because an unrecognized exception occurred durring saveDataToLocalStorage";
           }
         })());
       }

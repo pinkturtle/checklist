@@ -6,6 +6,7 @@ document.on "DOMContentLoaded", ->
   console.info "initializing window.checklist", t:performance.now()
   facts = window.facts = Facts()
   initialData = if serialized = localStorage.getItem("checklist datoms")
+    renderDatomTableHeader "data saved in storage"
     JSON.parse(serialized)
   else
     constructDemoChecklistDatoms()
@@ -80,7 +81,6 @@ renderDatomTableHeader = (situation) ->
 renderDatomTableHeader.patterns =
   "#Checklist-Datoms span.data.saved.in.storage":"data saved in storage"
   "#Checklist-Datoms span.data.is.volatile":"data is volatile"
-  "#Checklist-Datoms span.because.of.file.protocol":"storage isn’t available in windows loaded over the file: protocol"
   "#Checklist-Datoms span.because.of.quota":"storage quota was exceeded"
 
 renderDatomTableNovelty = (report) ->
@@ -110,12 +110,11 @@ saveDataToLocalStorage = ->
       renderDatomTableHeader "data saved in storage"
     catch exception
       renderDatomTableHeader "data is volatile" + switch
-        when exception.name is "QuotaExceededError" and location.protocol is "file:"
-          " because storage isn’t available in windows loaded over the file: protocol"
         when exception.name is "QuotaExceededError"
           " because storage quota was exceeded"
         else
-          console.error("Unrecognized exception durring saveDataToLocalStorage", exception) ? ""
+          console.error("Unrecognized exception durring saveDataToLocalStorage", exception)
+          " because an unrecognized exception occurred durring saveDataToLocalStorage"
 
 constructDemoChecklistDatoms = ->
   time = performance.timing.navigationStart
