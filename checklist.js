@@ -135,7 +135,9 @@
     results = [];
     for (selector in ref) {
       pattern = ref[selector];
-      results.push(document.querySelector(selector).style.display = situation.match(pattern) ? "inline" : "none");
+      results.push(Array.from(document.querySelectorAll(selector)).map(function(element) {
+        return element.style.display = situation.match(pattern) ? "inline" : "none";
+      }));
     }
     return results;
   };

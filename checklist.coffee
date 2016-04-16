@@ -76,7 +76,8 @@ renderDatomTableHeader = (situation) ->
   console.info "renderDatomTableHeader", arguments
   renderDatomTableHeader.situation = situation
   for selector, pattern of renderDatomTableHeader.patterns
-    document.querySelector(selector).style.display = if situation.match pattern then "inline" else "none"
+    Array.from(document.querySelectorAll(selector)).map (element) ->
+      element.style.display = if situation.match pattern then "inline" else "none"
 
 renderDatomTableHeader.patterns =
   "#Checklist-Datoms span.data.saved.in.storage":"data saved in storage"
