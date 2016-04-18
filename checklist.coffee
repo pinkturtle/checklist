@@ -30,13 +30,16 @@ document.on "DOMContentLoaded", ->
   document.body.setAttribute "initialized", yes
   console.info "display is ready", t: performance.now()
 
+# Guard against empty input tags.
+document.on "keydown", "[contenteditable]", (event) ->
+  event.preventDefault() if event.keyCode is 8 and event.target.innerText.trim() is ""
 
 document.on "keydown", "#Checklist .title", (event) ->
   switch event.keyCode
     # Enter
     when 13 then event.preventDefault()
-    # Delete
-    when 8 then event.preventDefault() if event.target.innerText.trim() is ""
+    # # Delete
+    # when 8 then event.preventDefault() if event.target.innerText.trim() is ""
 
 document.on "paste", "#Checklist .title", (event) ->
   if text = event.clipboardData.getData("text/plain")
@@ -67,7 +70,7 @@ renderChecklist = (transaction) ->
     .on "change", (entity) ->
       checklist[if d3.event.target.checked then "advance" else "reverse"] entity.id, "checked": true
     .on "input", (entity) ->
-      checklist.advance entity.id, "label": d3.event.target.innerText
+      checklist.advance entity.id, "label": d3.event.target.innerText.trim()
   li.html (entity) -> """
     <label class="checkbox">
       <input name="entity-#{entity.id}" type="checkbox" #{if entity.checked then 'checked' else ''}>

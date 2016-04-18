@@ -68,7 +68,6 @@ small { font-size: 0; }
 
 /* Basics ---------------------------------------------------------------------------------------*/
 
-
 .checklist form { position:absolute; width:100%;  }
 .checklist header { border-bottom: 2px solid black; padding: 0px 0 9px; margin: 0 11px; }
 .checklist header div:first-child { line-height: 33px; }
@@ -87,7 +86,7 @@ small { font-size: 0; }
 .checklist li       .checkbox:hover input:checked + .icon + .box { outline-color: hsla(0, 0%, 0%, 0.33); }
 .checklist li       .checkbox                               .box { transform:scale3d(0.77,0.77,1); transition: transform 222ms ease-in; }
 .checklist li:hover .checkbox input:not(:checked) + .icon + .box { transform:scale3d(1,1,1); transition: transform 111ms ease-out; }
-.checklist li .label { white-space: pre-wrap; }
+.checklist li .label { white-space: pre-wrap; outline: 1px solid transparent; }
 
 .datoms table { border-collapse: collapse;}
 .datoms table * {position: relative; }

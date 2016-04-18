@@ -67,14 +67,16 @@
     });
   });
 
+  document.on("keydown", "[contenteditable]", function(event) {
+    if (event.keyCode === 8 && event.target.innerText.trim() === "") {
+      return event.preventDefault();
+    }
+  });
+
   document.on("keydown", "#Checklist .title", function(event) {
     switch (event.keyCode) {
       case 13:
         return event.preventDefault();
-      case 8:
-        if (event.target.innerText.trim() === "") {
-          return event.preventDefault();
-        }
     }
   });
 
@@ -134,7 +136,7 @@
       });
     }).on("input", function(entity) {
       return checklist.advance(entity.id, {
-        "label": d3.event.target.innerText
+        "label": d3.event.target.innerText.trim()
       });
     });
     li.html(function(entity) {
