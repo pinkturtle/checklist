@@ -30,28 +30,33 @@ document.on "DOMContentLoaded", ->
   document.body.setAttribute "initialized", yes
   console.info "display is ready", t: performance.now()
 
-# Guard against empty input tags.
-document.on "keydown", "[contenteditable]", (event) ->
-  event.preventDefault() if event.keyCode is 8 and event.target.innerText.trim() is ""
-
+# Guard against empty input tags (try outline trick).
 document.on "keydown", "#Checklist .title", (event) ->
   switch event.keyCode
     # Enter
     when 13 then event.preventDefault()
-    # # Delete
-    # when 8 then event.preventDefault() if event.target.innerText.trim() is ""
+    # Delete
+    when 8 then event.preventDefault() if event.target.innerText.trim() is ""
 
 document.on "paste", "#Checklist .title", (event) ->
   if text = event.clipboardData.getData("text/plain")
     event.preventDefault()
+    element = document.querySelector("#Checklist .title")
     renderChecklist checklist.advance(0, "title":text.replace(/\n/g, " ").trim()).transaction
-    resetPositionOfTextCursor(text)
+    if element.innerText
+      selection = window.getSelection()
+      selection.removeAllRanges()
+      range = document.createRange()
+      range.setStart(element.childNodes[0], element.innerText.length)
+      range.setEnd(element.childNodes[0], element.innerText.length)
+      selection.addRange(range)
     document.querySelector("#Checklist .title").focus()
 
 document.on "input", "#Checklist .title", (event) ->
   Function.delay 1, -> checklist.advance 0, "title": event.target.innerText.trim()
 
 document.on "mouseover", "#Checklist-Datoms [data-transaction]", (event) ->
+  document.activeElement.blur()
   transaction = event.target.closest("[data-transaction]").getAttribute("data-transaction")
   renderSelectedTransactionInDatomTable(transaction)
   renderChecklist(transaction)
@@ -60,28 +65,56 @@ document.on "mouseout", "#Checklist-Datoms", ->
   renderSelectedTransactionInDatomTable(checklist.datoms.get(0).get(4))
   renderChecklist(checklist.datoms.get(0).get(4))
 
-renderChecklist = (transaction) ->
+document.on "mouseover", "#Checklist ol.entities li", (event, li) ->
+  element = li.querySelector("[contenteditable]")
+  if element.innerText
+    selection = window.getSelection()
+    selection.removeAllRanges()
+    range = document.createRange()
+    range.setStart(element.childNodes[0], element.innerText.length)
+    range.setEnd(element.childNodes[0], element.innerText.length)
+    selection.addRange(range)
+  element.focus()
+
+document.on "focus", "#Checklist ol.entities li", (event, li) ->
+  li.classList.add("focused")
+
+document.on "blur", "#Checklist ol.entities li", (event, li) ->
+  li.classList.remove("focused")
+
+renderChecklist = (transaction, focused) ->
   database = checklist.database(Number(transaction.replace("T","0")))
   root = Facts.query(in:database, where:(id) -> id is 0)[0]
-  entities = Facts.query(in:database, where:(id) -> id in root.entities)
-  li = d3.select("#Checklist").select("ol.entities").selectAll("li").data(entities, (entity)->entity.id)
+  entities = Facts.query(in:database, where:(id) -> id in root.entities and id isnt focused)
+  entities.push({id:d3.max(root.entities)+1})
+  li = d3.select("#Checklist").select("ol.entities").selectAll("li:not(.focused)").data(entities, (entity)->entity.id)
   li.enter()
     .append "li"
+    .on "keydown", (entity) ->
+      if event.keyCode is 8 and d3.event.target.innerText.trim() is "" and d3.event.target.innerText.length < 2 and d3.event.target.innerText isnt " "
+        d3.event.target.blur()
+        report = checklist.advance 0, entities:checklist.pull(0).entities.filter((id) -> id isnt entity.id)
+        renderChecklist(report.transaction)
     .on "change", (entity) ->
       checklist[if d3.event.target.checked then "advance" else "reverse"] entity.id, "checked": true
     .on "input", (entity) ->
       checklist.advance entity.id, "label": d3.event.target.innerText.trim()
+      root = checklist.pull(0)
+      if (entity.id in root.entities) is false
+        report = checklist.advance root.id, entities:root.entities.concat([entity.id])
+        renderChecklist(report.transaction, entity.id)
   li.html (entity) -> """
     <label class="checkbox">
       <input name="entity-#{entity.id}" type="checkbox" #{if entity.checked then 'checked' else ''}>
       <span class="icon">✔︎</span>
       <span class="box"></span>
     </label>
-    <div class="text label" contenteditable="plaintext-only">#{entity.label}</div>
+    <div class="text label" contenteditable="plaintext-only">#{entity.label or ''}</div>
     """
   li.exit().remove()
   renderChecklistTitle(root["title"])
   renderChecklistVersion({transaction})
+
 
 renderChecklistTitle = (title) ->
   document.querySelector("#Checklist .title").innerText = title or "\n"
@@ -150,13 +183,3 @@ constructDemoChecklistDatoms = ->
     [true, 0, "title", "Checklist", transaction]
     [true, 0, "entities", [1, 2, 3], transaction]
   ]
-
-resetPositionOfTextCursor = (text) ->
-  textElement = document.querySelector("#Checklist .title")
-  selection = window.getSelection()
-  selection.removeAllRanges()
-  if text
-    range = document.createRange()
-    range.setStart(textElement.childNodes[0], text.length)
-    range.setEnd(textElement.childNodes[0], text.length)
-    selection.addRange(range)

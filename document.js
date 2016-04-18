@@ -16,7 +16,7 @@
     } else {
       wrapped = procedure;
     }
-    return document.addEventListener(eventname, wrapped);
+    return document.addEventListener(eventname, wrapped, true);
   };
 
 }).call(this);

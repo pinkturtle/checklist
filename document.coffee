@@ -8,4 +8,4 @@ document.on = (eventname, selector, procedure) ->
         procedure(event, element)
   else
     wrapped = procedure
-  document.addEventListener eventname, wrapped
+  document.addEventListener eventname, wrapped, yes
