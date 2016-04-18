@@ -75,7 +75,6 @@ renderChecklist = (transaction, focused) ->
         range.setEnd(element.childNodes[0], element.innerText.length)
         selection.addRange(range)
       element.focus()
-
     .on "keydown", (entity) ->
       if event.keyCode is 8 and d3.event.target.innerText.trim() is "" and d3.event.target.innerText.length < 2 and d3.event.target.innerText isnt " "
         d3.event.target.blur()
