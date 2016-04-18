@@ -41,12 +41,12 @@ document.on "keydown", "#Checklist .title", (event) ->
 document.on "paste", "#Checklist .title", (event) ->
   if text = event.clipboardData.getData("text/plain")
     event.preventDefault()
-    renderChecklist checklist.advance("checklist", "title":text.replace(/\n/g, " ").trim()).transaction
+    renderChecklist checklist.advance(0, "title":text.replace(/\n/g, " ").trim()).transaction
     resetPositionOfTextCursor(text)
     document.querySelector("#Checklist .title").focus()
 
 document.on "input", "#Checklist .title", (event) ->
-  Function.delay 1, -> checklist.advance "checklist", "title": event.target.innerText.trim()
+  Function.delay 1, -> checklist.advance 0, "title": event.target.innerText.trim()
 
 document.on "mouseover", "#Checklist-Datoms [data-transaction]", (event) ->
   transaction = event.target.closest("[data-transaction]").getAttribute("data-transaction")
@@ -59,7 +59,7 @@ document.on "mouseout", "#Checklist-Datoms", ->
 
 renderChecklist = (transaction) ->
   database = checklist.database(Number(transaction.replace("T","0")))
-  root = Facts.query(in:database, where:(id) -> id is "checklist")[0]
+  root = Facts.query(in:database, where:(id) -> id is 0)[0]
   entities = Facts.query(in:database, where:(id) -> id in root.entities)
   li = d3.select("#Checklist").select("ol.entities").selectAll("li").data(entities, (entity)->entity.id)
   li.enter()
@@ -84,7 +84,7 @@ renderChecklistTitle = (title) ->
   document.querySelector("#Checklist .title").innerText = title or "\n"
 
 renderChecklistTitleInHead = ->
-  document.querySelector("title").innerText = checklist.pull("checklist")["title"] or "undefined"
+  document.querySelector("title").innerText = checklist.pull(0)["title"] or "undefined"
 
 renderChecklistVersion = (report) ->
   transaction = report?.transaction or checklist.datoms.first().get(4)
@@ -108,7 +108,7 @@ renderDatomTableNovelty = (report) ->
   report.data.forEach (datom) ->
     tbody.insert("tr", ":first-child").attr("data-transaction",datom.get(4)).html """
       <td class="credence">#{datom.get(0)}</td>
-      <td class="entity">#{datom.get(1)}</td>
+      <td class="entity">#{("0"+String(datom.get(1))).slice(-2)}</td>
       <td class="attribute">#{datom.get(2)}</td>
       <td class="value"><div>#{JSON.stringify(datom.get(3))}</div></td>
       <td class="transaction">T#{Number(datom.get(4).replace("T","0")).toFixed(3)}</td>
@@ -141,11 +141,11 @@ constructDemoChecklistDatoms = ->
   transaction = "T"+time
   return [
     [true, transaction, "time", time, transaction]
-    [true, "checklist", "entities", [1, 2, 3], transaction]
-    [true, "checklist", "title", "Checklist", transaction]
     [true, 1, "label", "Buy peanut butter", transaction]
     [true, 2, "label", "Get a job", transaction]
     [true, 3, "label", "Memorize Surfer Girl\nVerse 1:\nD+ B- G5 A5 𝄀 D▵ D7 G+ G-\nD+ B- G5 A5 𝄀 D+ B- G+ A+\nVerse 2:\nD+ B- G5 A5 𝄀 D▵ D7 G+ G-\nD+ B- G5 A5 𝄀 D+ B-/G D+ D7\n", transaction]
+    [true, 0, "title", "Checklist", transaction]
+    [true, 0, "entities", [1, 2, 3], transaction]
   ]
 
 resetPositionOfTextCursor = (text) ->

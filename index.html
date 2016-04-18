@@ -16,14 +16,23 @@
   <table>
   <thead>
     <tr>
-      <th class="credence"><div>OK?&nbsp;&nbsp;</div></div></th>
-      <th class="entity.id"><div>Entity</div></th>
+      <th class="credence"><div>Fact?</div></div></th>
+      <th class="entity.id"><div>ID</div></th>
       <th class="attribute"><div>Attribute</div></th>
       <th class="value"><div>Value</div></th>
       <th class="transaction"><div>Transaction</div></th>
     </tr>
   </thead>
   <tbody></tbody>
+  <tfoot>
+    <tr>
+      <td class="credence"><div>&nbsp;</div></td>
+      <td class="entity.id"><div>&nbsp;</div></td>
+      <td class="attribute"><div>&nbsp;</div></td>
+      <td class="value"><div>&nbsp;</div></td>
+      <td class="transaction"><div>&nbsp;</div></td>
+    </tr>
+  </tfoot>
   </table>
 </article>
 
@@ -82,16 +91,16 @@ small { font-size: 0; }
 
 .datoms table { border-collapse: collapse;}
 .datoms table * {position: relative; }
-.datoms table th { text-align: left; font-weight: normal; opacity: 1; padding-right: 11px; }
+.datoms table th { text-align: left; font-weight: normal; opacity: 1; padding-right: 1em; }
 .datoms table th:last-child { padding:0; }
 .datoms table th div { border-bottom: 1px solid hsla(0, 0%, 0%, 0.33); border-top: 1px solid hsla(0, 0%, 0%, 0.33); }
-.datoms table td { opacity: 0.66; padding-right: 11px; }
-.datoms table td div {white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: absolute; left: 0; right: 11px; top: 0; height: 11px; }
-.datoms table .credence { width: 1%; }
-.datoms table .entity { width: 1%; }
-.datoms table .attribute { width: 1%; }
-.datoms table .value { width:96%; }
-.datoms table .transaction { width: 1%; padding: 0;}
+.datoms table td { opacity: 0.66; }
+.datoms table td div {white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: absolute; left: 0; right: 1em; top: 0; height: 11px; }
+.datoms table .credence { width: 0.25%; }
+.datoms table .entity { width: 0.25%; }
+.datoms table .attribute { width: 0.25%; }
+.datoms table .value { width:99%; }
+.datoms table .transaction { width: 0.25%; padding: 0;}
 .datoms table tr.selected td { background: hsl(210, 66%, 80%); opacity: 1;}
 .datoms table tr.after td  { background:transparent; opacity: 0.33; }
 .datoms table tr.before td { background:transparent; opacity: 1; }
@@ -99,7 +108,7 @@ small { font-size: 0; }
 /* Layout ---------------------------------------------------------------------------------------*/
 
 body { padding: 11px 0; }
-article { min-height: 693px; width: 47%; max-width: 484px; margin: 1.11% 0.22% 1.11%; padding: 11px; }
+article { min-height: 693px; width: 47%; max-width: 484px; margin: 2.22% 0.22% 1.11%; padding: 11px; }
 #Checklist:not(.initialized), #Checklist-Datoms:not(.initialized) { visibility: hidden; }
 #Checklist { position: fixed; right: 50%; top: 11px; }
 #Checklist-Datoms { position: relative; left: 50%; top: 0px; }
@@ -123,6 +132,7 @@ footer a:hover * { cursor: pointer; }
 footer a { color: hsla(210, 88%, 85%, 1); }
 footer a[href=""], footer a.view.source { color:inherit; text-decoration: underline;}
 
+.datoms header { position: absolute; top: -1.33em; left: 0; right: 0; padding: 0; margin: 0; text-align: center; }
 
 
 </style>

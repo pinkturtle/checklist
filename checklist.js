@@ -82,7 +82,7 @@
     var text;
     if (text = event.clipboardData.getData("text/plain")) {
       event.preventDefault();
-      renderChecklist(checklist.advance("checklist", {
+      renderChecklist(checklist.advance(0, {
         "title": text.replace(/\n/g, " ").trim()
       }).transaction);
       resetPositionOfTextCursor(text);
@@ -92,7 +92,7 @@
 
   document.on("input", "#Checklist .title", function(event) {
     return Function.delay(1, function() {
-      return checklist.advance("checklist", {
+      return checklist.advance(0, {
         "title": event.target.innerText.trim()
       });
     });
@@ -116,7 +116,7 @@
     root = Facts.query({
       "in": database,
       where: function(id) {
-        return id === "checklist";
+        return id === 0;
       }
     })[0];
     entities = Facts.query({
@@ -152,7 +152,7 @@
   };
 
   renderChecklistTitleInHead = function() {
-    return document.querySelector("title").innerText = checklist.pull("checklist")["title"] || "undefined";
+    return document.querySelector("title").innerText = checklist.pull(0)["title"] || "undefined";
   };
 
   renderChecklistVersion = function(report) {
@@ -189,7 +189,7 @@
     var tbody;
     tbody = d3.select("#Checklist-Datoms table tbody");
     report.data.forEach(function(datom) {
-      return tbody.insert("tr", ":first-child").attr("data-transaction", datom.get(4)).html("<td class=\"credence\">" + (datom.get(0)) + "</td>\n<td class=\"entity\">" + (datom.get(1)) + "</td>\n<td class=\"attribute\">" + (datom.get(2)) + "</td>\n<td class=\"value\"><div>" + (JSON.stringify(datom.get(3))) + "</div></td>\n<td class=\"transaction\">T" + (Number(datom.get(4).replace("T", "0")).toFixed(3)) + "</td>");
+      return tbody.insert("tr", ":first-child").attr("data-transaction", datom.get(4)).html("<td class=\"credence\">" + (datom.get(0)) + "</td>\n<td class=\"entity\">" + (("0" + String(datom.get(1))).slice(-2)) + "</td>\n<td class=\"attribute\">" + (datom.get(2)) + "</td>\n<td class=\"value\"><div>" + (JSON.stringify(datom.get(3))) + "</div></td>\n<td class=\"transaction\">T" + (Number(datom.get(4).replace("T", "0")).toFixed(3)) + "</td>");
     });
     return renderSelectedTransactionInDatomTable(report.transaction);
   };
@@ -234,7 +234,7 @@
     var time, transaction;
     time = performance.timing.navigationStart;
     transaction = "T" + time;
-    return [[true, transaction, "time", time, transaction], [true, "checklist", "entities", [1, 2, 3], transaction], [true, "checklist", "title", "Checklist", transaction], [true, 1, "label", "Buy peanut butter", transaction], [true, 2, "label", "Get a job", transaction], [true, 3, "label", "Memorize Surfer Girl\nVerse 1:\nD+ B- G5 A5 𝄀 D▵ D7 G+ G-\nD+ B- G5 A5 𝄀 D+ B- G+ A+\nVerse 2:\nD+ B- G5 A5 𝄀 D▵ D7 G+ G-\nD+ B- G5 A5 𝄀 D+ B-/G D+ D7\n", transaction]];
+    return [[true, transaction, "time", time, transaction], [true, 1, "label", "Buy peanut butter", transaction], [true, 2, "label", "Get a job", transaction], [true, 3, "label", "Memorize Surfer Girl\nVerse 1:\nD+ B- G5 A5 𝄀 D▵ D7 G+ G-\nD+ B- G5 A5 𝄀 D+ B- G+ A+\nVerse 2:\nD+ B- G5 A5 𝄀 D▵ D7 G+ G-\nD+ B- G5 A5 𝄀 D+ B-/G D+ D7\n", transaction], [true, 0, "title", "Checklist", transaction], [true, 0, "entities", [1, 2, 3], transaction]];
   };
 
   resetPositionOfTextCursor = function(text) {
