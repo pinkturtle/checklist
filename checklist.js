@@ -59,7 +59,7 @@
     document.querySelector("#Checklist").classList.add("initialized");
     document.querySelector("#Checklist-Datoms").classList.add("initialized");
     if (typeof TouchEvent !== "undefined" && TouchEvent !== null) {
-      document.body.setAttribute("touch-events");
+      document.body.setAttribute("touch-events", true);
     }
     document.body.setAttribute("initialized", true);
     return console.info("display is ready", {
@@ -75,26 +75,6 @@
         if (event.target.innerText.trim() === "") {
           return event.preventDefault();
         }
-    }
-  });
-
-  document.on("paste", "#Checklist .title", function(event) {
-    var element, range, selection, text;
-    if (text = event.clipboardData.getData("text/plain")) {
-      event.preventDefault();
-      element = document.querySelector("#Checklist .title");
-      renderChecklist(checklist.advance(0, {
-        "title": text.replace(/\n/g, " ").trim()
-      }).transaction);
-      if (element.innerText) {
-        selection = window.getSelection();
-        selection.removeAllRanges();
-        range = document.createRange();
-        range.setStart(element.childNodes[0], element.innerText.length);
-        range.setEnd(element.childNodes[0], element.innerText.length);
-        selection.addRange(range);
-      }
-      return document.querySelector("#Checklist .title").focus();
     }
   });
 

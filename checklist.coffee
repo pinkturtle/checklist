@@ -26,7 +26,7 @@ document.on "DOMContentLoaded", ->
   renderChecklistTitleInHead()
   document.querySelector("#Checklist").classList.add("initialized")
   document.querySelector("#Checklist-Datoms").classList.add("initialized")
-  document.body.setAttribute "touch-events" if TouchEvent?
+  document.body.setAttribute "touch-events", yes if TouchEvent?
   document.body.setAttribute "initialized", yes
   console.info "display is ready", t: performance.now()
 
@@ -37,20 +37,6 @@ document.on "keydown", "#Checklist .title", (event) ->
     when 13 then event.preventDefault()
     # Delete
     when 8 then event.preventDefault() if event.target.innerText.trim() is ""
-
-document.on "paste", "#Checklist .title", (event) ->
-  if text = event.clipboardData.getData("text/plain")
-    event.preventDefault()
-    element = document.querySelector("#Checklist .title")
-    renderChecklist checklist.advance(0, "title":text.replace(/\n/g, " ").trim()).transaction
-    if element.innerText
-      selection = window.getSelection()
-      selection.removeAllRanges()
-      range = document.createRange()
-      range.setStart(element.childNodes[0], element.innerText.length)
-      range.setEnd(element.childNodes[0], element.innerText.length)
-      selection.addRange(range)
-    document.querySelector("#Checklist .title").focus()
 
 document.on "input", "#Checklist .title", (event) ->
   Function.delay 1, -> checklist.advance 0, "title": event.target.innerText.trim()

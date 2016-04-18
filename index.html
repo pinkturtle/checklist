@@ -54,7 +54,7 @@
 
 body, header, footer, h1, div, article, nav, ol, ul, li, p, pre, form, input { position: relative; margin:0; padding:0; }
 h1, p, pre, input, em, strong { font:inherit; }
-[contenteditable] { outline: none; }
+[contenteditable] { outline: 1px solid transparent; }
 * { cursor: default; }
 a { cursor: pointer; text-decoration: none;}
 
@@ -87,7 +87,8 @@ small { font-size: 0; }
 .checklist li       .checkbox:hover input:checked + .icon + .box { outline-color: hsla(0, 0%, 0%, 0.33); }
 .checklist li       .checkbox                               .box { transform:scale3d(0.77,0.77,1); transition: transform 222ms ease-in; }
 .checklist li:hover .checkbox input:not(:checked) + .icon + .box { transform:scale3d(1,1,1); transition: transform 111ms ease-out; }
-.checklist li .label { white-space: pre-wrap; outline: 1px solid transparent; }
+.checklist li .label { white-space: pre-wrap; }
+.checklist header strong { display:block; }
 
 .datoms table { border-collapse: collapse;}
 .datoms table * {position: relative; }
