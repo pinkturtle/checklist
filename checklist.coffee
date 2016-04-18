@@ -110,20 +110,22 @@ renderChecklistTitleInHead = ->
 
 renderChecklistVersion = (report) ->
   transaction = report?.transaction or checklist.datoms.first().get(4)
-  document.querySelector("#Checklist .version").innerText = transaction
+  document.querySelector("#Checklist header .version").innerText = Number(transaction.replace("T","0")).toFixed(3)
+  document.querySelector("#Checklist header time").innerText = renderChecklistVersion.dateFormat new Date(Number(transaction.replace("T","0")))
+
+renderChecklistVersion.dateFormat = d3.time.format("%A %B %d %Y at %I:%M:%S %p")
 
 renderDatomTableHeader = (situation) ->
   return if renderDatomTableHeader.situation is situation
-  console.info "renderDatomTableHeader", arguments
   renderDatomTableHeader.situation = situation
   for selector, pattern of renderDatomTableHeader.patterns
     Array.from(document.querySelectorAll(selector)).map (element) ->
-      element.style.display = if situation.match pattern then "inline" else "none"
+      element.style.display = if situation.match pattern then "" else "none"
 
 renderDatomTableHeader.patterns =
-  "#Checklist-Datoms span.data.saved.in.storage":"data saved in storage"
-  "#Checklist-Datoms span.data.is.volatile":"data is volatile"
-  "#Checklist-Datoms span.because.of.quota":"storage quota was exceeded"
+  "#Checklist-Datoms .data.saved.in.storage":"data saved in storage"
+  "#Checklist-Datoms .data.is.volatile":"data is volatile"
+  "#Checklist-Datoms .because.of.quota":"storage quota was exceeded"
 
 renderDatomTableNovelty = (report) ->
   tbody = d3.select("#Checklist-Datoms table tbody")

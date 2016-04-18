@@ -191,31 +191,33 @@
   renderChecklistVersion = function(report) {
     var transaction;
     transaction = (report != null ? report.transaction : void 0) || checklist.datoms.first().get(4);
-    return document.querySelector("#Checklist .version").innerText = transaction;
+    document.querySelector("#Checklist header .version").innerText = Number(transaction.replace("T", "0")).toFixed(3);
+    return document.querySelector("#Checklist header time").innerText = renderChecklistVersion.dateFormat(new Date(Number(transaction.replace("T", "0"))));
   };
+
+  renderChecklistVersion.dateFormat = d3.time.format("%A %B %d %Y at %I:%M:%S %p");
 
   renderDatomTableHeader = function(situation) {
     var pattern, ref, results, selector;
     if (renderDatomTableHeader.situation === situation) {
       return;
     }
-    console.info("renderDatomTableHeader", arguments);
     renderDatomTableHeader.situation = situation;
     ref = renderDatomTableHeader.patterns;
     results = [];
     for (selector in ref) {
       pattern = ref[selector];
       results.push(Array.from(document.querySelectorAll(selector)).map(function(element) {
-        return element.style.display = situation.match(pattern) ? "inline" : "none";
+        return element.style.display = situation.match(pattern) ? "" : "none";
       }));
     }
     return results;
   };
 
   renderDatomTableHeader.patterns = {
-    "#Checklist-Datoms span.data.saved.in.storage": "data saved in storage",
-    "#Checklist-Datoms span.data.is.volatile": "data is volatile",
-    "#Checklist-Datoms span.because.of.quota": "storage quota was exceeded"
+    "#Checklist-Datoms .data.saved.in.storage": "data saved in storage",
+    "#Checklist-Datoms .data.is.volatile": "data is volatile",
+    "#Checklist-Datoms .because.of.quota": "storage quota was exceeded"
   };
 
   renderDatomTableNovelty = function(report) {

@@ -6,13 +6,15 @@
 <script src="facts.pack.js" charset="utf-8"></script>
 <script src="checklist.js" charset="utf-8"></script>
 
-<header></header>
-
 <article id="Checklist-Datoms" class="datoms">
   <header>
-    Table of checklist datoms in memory<span class="data saved in storage" style="display:none;"> and serialized in local storage</span>.
-    <span class="data is volatile" style="display:none;"><br><br><em>Caution:</em> These <strong>datoms will be forgotten</strong> when the window is unloaded<span class="because of quota" style="display:none;"> becuase the storage quota has been exceeded</span>.</span><span class="because of quota" style="display:none;"> Perhaps this is an Incognito or Private Window?</span><br><br></span>
+    <div>Table of checklist datoms in memory<span class="data saved in storage" style="display:none;"> and serialized in local storage</span>.</div>
   </header>
+  <div class="data is volatile" style="display:none;">
+    <em>Caution:</em>
+    All these <strong>datoms will be forgotten</strong> when this window is unloaded<span class="because of quota" style="display:none;"> becuase the local storage quota has been exceeded</span>.
+    <span class="because of quota" style="display:none;"> Perhaps this is a Private Window where local storage has been disabled?</span>
+  </div>
   <table>
   <thead>
     <tr>
@@ -38,21 +40,23 @@
 
 <article id="Checklist" class="checklist">
   <header>
-    <div><strong class="title" contenteditable="plaintext-only">&nbsp;</strong></div>
-    <div>Version <span class="version">&nbsp;</span></div>
+    <div>Version <span class="version"></span> on <time><span class="date"></span> <span class="time"></span></time></div>
   </header>
+  <div><strong class="title" contenteditable="plaintext-only">&nbsp;</strong></div>
   <ol class="entities"></ol>
-
 </article>
 
 <footer>
-<a href="" title="The web page that is loaded in your web agent at the moment.">This</a> is a demo of <a href="https://pinkturtle.github.io/facts/" title="Explore the Facts documentation."><img src="pinkturtle@0.1x.png" alt="pinkturtle"> <strong>Facts</strong></a>.
-<a class="view source" href="https://github.com/pinkturtle/checklist" title="Read the source code for this page at GitHub.">View source</a>.
+<a href="" title="The document that is loaded in your web agent at the moment.">This</a>
+is a demo of <a href="https://pinkturtle.github.io/facts/" title="Explore the Facts documentation."><img src="pinkturtle@0.1x.png" alt="pinkturtle"><strong>Facts</strong></a>
+with <a href="https://d3js.org/" title="Explore the D3 documentation."><strong>D3</strong></a>.
+<br>
+<a class="view source" href="https://github.com/pinkturtle/checklist" title="Read the source code for this page at GitHub.">View the source code</a>.
 </footer>
 
 <style media="screen">
 
-body, header, footer, h1, div, article, nav, ol, ul, li, p, pre, form, input { position: relative; margin:0; padding:0; }
+body, header, footer, h1, div, article, nav, ol, ul, li, p, pre, input { position: relative; margin:0; padding:0; }
 h1, p, pre, input, em, strong { font:inherit; }
 [contenteditable] { outline: 1px solid transparent; }
 * { cursor: default; }
@@ -60,20 +64,18 @@ a { cursor: pointer; text-decoration: none;}
 
 /* Typefaces ------------------------------------------------------------------------------------*/
 
-.checklist { font: 24px/33px "Chalkboard SE", "Comic Sans MS"; font-weight: 300; letter-spacing: -0.055ex; }
-.checklist > div, .checklist header div:last-child { font-size: 18px; line-height: 33px; }
-.datoms {font: 11px/1 monospace; -webkit-user-select:none; }
+.checklist { font: 18px/22px "Chalkboard SE", "Comic Sans MS"; font-weight: 300; letter-spacing: -0.055ex; }
+header, .datoms {font: 11px/1 monospace; -webkit-user-select:none; letter-spacing: 0; }
 body > footer { font: 16px/22px -apple-system-font, sans-serif; }
-strong { font-weight: 600; }
+strong { font-weight: 900; }
 small { font-size: 0; }
 
 /* Basics ---------------------------------------------------------------------------------------*/
 
-.checklist form { position:absolute; width:100%;  }
-.checklist header { border-bottom: 2px solid black; padding: 0px 0 9px; margin: 0 11px; }
-.checklist header div:first-child { line-height: 33px; }
-.checklist header div:last-child { line-height: 22px; }
-.checklist .entities {   list-style-type: none; font-size: 18px; line-height: 22px; padding: 0;}
+article header { position: absolute; bottom: 100%; left: 0; right: 0; text-align: center; white-space: nowrap; margin: 0 11px 4px;}
+
+.checklist strong.title { display:block; border-bottom: 2px solid #222; padding: 0px 0 9px; margin: 0 11px; padding: 0px 0 9px; margin: 0 11px;}
+.checklist .entities {   list-style-type: none; padding: 0;}
 .checklist .entities > li { margin: 11px; padding-left: 22px; transform:scale3d(1,1,1); transform-origin: left; transition: transform 111ms;}
 .checklist li .checkbox { position: absolute; left:-22px; top: -5px; width: 44px; height: 33px; }
 .checklist li .checkbox input { position: absolute; left:0; top: 0; right:0; bottom: 0; visibility: hidden; }
@@ -88,7 +90,6 @@ small { font-size: 0; }
 .checklist li       .checkbox                               .box { transform:scale3d(0.77,0.77,1); transition: transform 222ms ease-in; }
 .checklist li:hover .checkbox input:not(:checked) + .icon + .box { transform:scale3d(1,1,1); transition: transform 111ms ease-out; }
 .checklist li .label { white-space: pre-wrap; }
-.checklist header strong { display:block; }
 
 .datoms table { border-collapse: collapse;}
 .datoms table * {position: relative; }
@@ -105,35 +106,33 @@ small { font-size: 0; }
 .datoms table tr.selected td { background: hsl(210, 66%, 80%); opacity: 1;}
 .datoms table tr.after td  { background:transparent; opacity: 0.33; }
 .datoms table tr.before td { background:transparent; opacity: 1; }
+.datoms div.data.is.volatile { padding-bottom: 11px; }
+.datoms div.data.is.volatile em { background-color: hsla(33, 88%, 55%, 1); color: black; padding: 0 0px 0px 2px; margin: 0px -2px;}
 
 /* Layout ---------------------------------------------------------------------------------------*/
 
 body { padding: 11px 0; }
-article { min-height: 693px; width: 47%; max-width: 484px; margin: 2.22% 0.22% 1.11%; padding: 11px; }
+article { min-height: 550px; width: 47%; max-width: 484px; margin: 2.22% 0.22% 1.11%; padding: 11px; }
 #Checklist:not(.initialized), #Checklist-Datoms:not(.initialized) { visibility: hidden; }
 #Checklist { position: fixed; right: 50%; top: 11px; }
 #Checklist-Datoms { position: relative; left: 50%; top: 0px; }
-body > header { left: 50%; width: 50%; padding: 0 0.33% 0; }
 body > footer { left: 50%; width: 50%; margin: -1.11% 0.33% 0%; padding: 2.22% 0 1.11%;}
-img[alt=pinkturtle] { width: 1em; opacity: 1; vertical-align: baseline; margin: 0 0.33ex; top: 1px; position: relative; }
+img[alt=pinkturtle] { width: 1em; opacity: 1; vertical-align: baseline; margin: 0 0.22ex 0 0.44ex; top: 2px; position: relative; }
 
 /* Paint ----------------------------------------------------------------------------------------*/
 
 body { background: hsl(0, 0%, 0%); transition: background linear 99ms; }
 body[initialized] { background: hsl(0, 0%, 33%); }
 body[initialized=redirect] { background: hsl(150, 88%, 44%); transition: background ease-out 555ms; }
-article { box-shadow: 0px 2px 11px hsla(0, 0%, 0%, 0.77); }
+article { box-shadow: 0px 2px 11px hsla(0, 0%, 0%, 0.77); color: hsla(0, 0%, 0%, 1); }
 #Checklist { background: hsl(60, 44%, 93%); }
 #Checklist-Datoms { background: hsl(210, 44%, 93%); }
 #Checklist-Datoms table tr.selected td { background: hsl(210, 77%, 88%); }
-footer { color: hsla(0, 0%, 100%, 1); }
+header, footer { color: hsla(0, 0%, 66%, 1); }
 body:not([accepts-touch-events]) footer       { opacity: 0.33; transition: opacity 99ms linear; }
 body:not([accepts-touch-events]) footer:hover { opacity: 1; }
 footer a:hover * { cursor: pointer; }
 footer a { color: hsla(210, 88%, 85%, 1); }
 footer a[href=""], footer a.view.source { color:inherit; text-decoration: underline;}
-
-.datoms header { position: absolute; top: -1.33em; left: 0; right: 0; padding: 0; margin: 0; text-align: center; }
-
 
 </style>
