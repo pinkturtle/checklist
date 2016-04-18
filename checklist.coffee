@@ -51,17 +51,6 @@ document.on "mouseout", "#Checklist-Datoms", ->
   renderSelectedTransactionInDatomTable(checklist.datoms.get(0).get(4))
   renderChecklist(checklist.datoms.get(0).get(4))
 
-document.on "mouseover", "#Checklist ol.entities li", (event, li) ->
-  element = li.querySelector("[contenteditable]")
-  if element.innerText
-    selection = window.getSelection()
-    selection.removeAllRanges()
-    range = document.createRange()
-    range.setStart(element.childNodes[0], element.innerText.length)
-    range.setEnd(element.childNodes[0], element.innerText.length)
-    selection.addRange(range)
-  element.focus()
-
 document.on "focus", "#Checklist ol.entities li", (event, li) ->
   li.classList.add("focused")
 
@@ -76,6 +65,17 @@ renderChecklist = (transaction, focused) ->
   li = d3.select("#Checklist").select("ol.entities").selectAll("li:not(.focused)").data(entities, (entity)->entity.id)
   li.enter()
     .append "li"
+    .on "mouseover", (entity) ->
+      element = this.querySelector("[contenteditable]")
+      if element.innerText
+        selection = window.getSelection()
+        selection.removeAllRanges()
+        range = document.createRange()
+        range.setStart(element.childNodes[0], element.innerText.length)
+        range.setEnd(element.childNodes[0], element.innerText.length)
+        selection.addRange(range)
+      element.focus()
+
     .on "keydown", (entity) ->
       if event.keyCode is 8 and d3.event.target.innerText.trim() is "" and d3.event.target.innerText.length < 2 and d3.event.target.innerText isnt " "
         d3.event.target.blur()

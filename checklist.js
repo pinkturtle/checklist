@@ -99,20 +99,6 @@
     return renderChecklist(checklist.datoms.get(0).get(4));
   });
 
-  document.on("mouseover", "#Checklist ol.entities li", function(event, li) {
-    var element, range, selection;
-    element = li.querySelector("[contenteditable]");
-    if (element.innerText) {
-      selection = window.getSelection();
-      selection.removeAllRanges();
-      range = document.createRange();
-      range.setStart(element.childNodes[0], element.innerText.length);
-      range.setEnd(element.childNodes[0], element.innerText.length);
-      selection.addRange(range);
-    }
-    return element.focus();
-  });
-
   document.on("focus", "#Checklist ol.entities li", function(event, li) {
     return li.classList.add("focused");
   });
@@ -142,7 +128,19 @@
     li = d3.select("#Checklist").select("ol.entities").selectAll("li:not(.focused)").data(entities, function(entity) {
       return entity.id;
     });
-    li.enter().append("li").on("keydown", function(entity) {
+    li.enter().append("li").on("mouseover", function(entity) {
+      var element, range, selection;
+      element = this.querySelector("[contenteditable]");
+      if (element.innerText) {
+        selection = window.getSelection();
+        selection.removeAllRanges();
+        range = document.createRange();
+        range.setStart(element.childNodes[0], element.innerText.length);
+        range.setEnd(element.childNodes[0], element.innerText.length);
+        selection.addRange(range);
+      }
+      return element.focus();
+    }).on("keydown", function(entity) {
       var report;
       if (event.keyCode === 8 && d3.event.target.innerText.trim() === "" && d3.event.target.innerText.length < 2 && d3.event.target.innerText !== " ") {
         d3.event.target.blur();
