@@ -143,6 +143,7 @@
     }).on("keydown", function(entity) {
       var report;
       if (event.keyCode === 8 && d3.event.target.innerText.trim() === "" && d3.event.target.innerText.length < 2 && d3.event.target.innerText !== " ") {
+        event.preventDefault();
         d3.event.target.blur();
         report = checklist.advance(0, {
           entities: checklist.pull(0).entities.filter(function(id) {

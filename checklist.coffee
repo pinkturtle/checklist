@@ -76,7 +76,9 @@ renderChecklist = (transaction, focused) ->
         selection.addRange(range)
       element.focus()
     .on "keydown", (entity) ->
+      # Remove entity when Delete key is pressed in an empty-ish item.
       if event.keyCode is 8 and d3.event.target.innerText.trim() is "" and d3.event.target.innerText.length < 2 and d3.event.target.innerText isnt " "
+        event.preventDefault()
         d3.event.target.blur()
         report = checklist.advance 0, entities:checklist.pull(0).entities.filter((id) -> id isnt entity.id)
         renderChecklist(report.transaction)
